@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import pymongo
 from urllib import parse
 from os.path import abspath, dirname
+from celery_download_img import download
 
 TEMPLATES_FOLDER = dirname(abspath(__file__)) + '/templates/'
 
@@ -166,6 +167,7 @@ class JDTry(object):
                     # 保存至Mongo数据库
                     if not self.collection_skus.find_one({'sku_id': data['sku_id']}):
                         self.collection_skus.insert_one(data)
+                    download.delay(data['img'])
 
 
 
